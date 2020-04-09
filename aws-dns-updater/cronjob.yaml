@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jobs
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: aws-route53-creds
+  namespace: jobs
+spec:
+  encryptedData:
+    aws_access_key_id: AgAv7i538SRRcDiOQKsablexjQvf+9aktWCPFS3WI+I4fSnz/R9CAXdEB3RDZmjb0YV2Dy+4RErDzrw43pnupE8Q8OecCBiN5AbrpZVrf5cPuo1G6miA/olRqfMGEpuovQRTFPa9IpmXgXUFre5FVsyeoHPG3MpuuIjh+Id5tQkc/b4aG3VmONnXsDGdQgN2ZGhrurAZamGO3hT+GoWvgqUGEyTBwk6iLFrTysWzQmz2xBvk7aTIVkja3Vnvx4e3QgBTO4Ikf+YbeYpYIcS3/BMnSbp9IysuIfwseLQ26k5UAC2gy0YyPgcZPY3IU/d7DIARLd2wnsfBywDtsd4MkdKr8J6XJ1TjEH/KTTyqHboJJZ/p8f8j23PmJV/6a0ux7C2D1gSXZTXH/XlfmOMuYEepRv9DDGNMIfNT0HZg1Nq1NPAAMAXcIEv5egvdXQNhrYA8953zumEzUetnb7MlqH9sg/9i9VZFFjqbd6gj5mJyaY87cqUbGUbzjK0lrcvWw8qZmNNK0mvDWMQSiNZnAHrj9NUgeAPu0kd4u3xEPh956jTj+MZRhY7d7k1ZPW1GbGfAxXCcQuKVTrRD1GIXu3Qm5mTv/2B+ICIN7aj36R1Q3Rqh1UWxsDrZZyFzhkKVmAC2cT/awQigTpCXFQ54yS1eDkX6NrrU8joxSb9LFf/3f2YIihdT/0HTzK4IZkBddAMVUeYJ0ovx5NHOSK8ICQUQ9uYkZg==
+    aws_secret_access_key: AgBx/moCSAguE0tr1faolsFJlTr8lfBaf0b6oRHylVPYsmVSiJKW+lAK6ZNwMc/m4mxn8I6ML15yStfzukFN17yF7YxYYysgXTXoMybGEP7ZT8TvNpnhHhH8fFI4H6NQ9TRUThDK1sQbb9I6QAOsZWfXR5O3lNUhvcouWIFkS80GHRPQfmPEWz8QA4c5lyqjxNtSYCqnAOGCiGH8hIza7sewWuIVk9l+CEDRlh9r/lyHKnF4D/6Pvy2gApvARDRaeHxY5GsbueLWg1qIV0HFKtcBJ4SD/grLeCh0vgRLK2o3BZtmh3gGyHMLKFteS6oijJyd8SdmAWE7NqKr5R4a9rmSeMRq70Sm+t5/h41DUGuM7LR8LqSih2Fv5eA85OiHOWOg2r7mbGE/TeOjW5TKwBEjFYGXEyUEHb5dCWhmtmg1o63C/4jSwDEfQSv9dp+H+Qw+TZ5R5jxK+sN2d6t31KfHyNJHIAZreGpVuq35R3fl2HhjGLXBECzilzAeyk5ZSX/8gQn2ya0r0c2hh8275Rt7SviswVGDHVtjVA9tHzjJa+ix7vpM6DSnwuvHjgY+NfrkOs0sdfmtpzXPHNHcBU7TVI+WSm+cJqPFMknYKTiWxPpjAi2UKoj7bROpXges9gVNCxvxhrKRmVKGBqSPj1uueSyIsYJOlXZS0tENFKHXm4YCdHHKyaUnp3hiO1pJuVYce6QD7SWj7dOLFct5Uknir0zYQbLRH5284Ov66AQ+9tWpjvEVhzVW
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: aws-route53-creds
+      namespace: jobs
+    type: Opaque
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  namespace: jobs
+  name: aws-dns-updater
+spec:
+  schedule: "*/3 * * * *"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+            - name: aws-route53-creds
+          containers:
+          - name: aws-dns-updater
+            image: docker.io/swhurl/aws-dns-updater:latest
+            env:
+              - name: AWS_ACCESS_KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: aws-route53-creds
+                    key: aws_access_key_id
+              - name: AWS_SECRET_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: aws-route53-creds
+                    key: aws_secret_access_key
+              - name: DOMAIN
+                value: "swhurl.com."
+              - name: TYPE
+                value: "A"
+              - name: RECORDS
+                value: "swhurl.com,*.swhurl.com"
+              - name: HOSTED_ZONE_ID
+                value: "Z3NVP9T7260ZB8"
+          restartPolicy: OnFailure

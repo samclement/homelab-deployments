@@ -1,0 +1,14 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: null
+  name: stage-mf-swhurl-website-oauth2-proxy
+spec:
+  template:
+    spec:
+      $setElementOrder/containers:
+      - name: mf-swhurl-stage-oauth2-proxy
+      containers:
+      - image: docker.io/colemickens/oauth2_proxy:insecure_do_not_use
+        name: mf-swhurl-stage-oauth2-proxy

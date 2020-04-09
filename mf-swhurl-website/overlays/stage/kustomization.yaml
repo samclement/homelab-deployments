@@ -1,0 +1,20 @@
+bases:
+- ../../base
+resources:
+- sealed-secret.yaml
+namePrefix: stage-
+commonLabels:
+  app: stage-mf-swhurl-website
+patchesJson6902:
+- target:
+    group: extensions
+    version: v1beta1
+    kind: Ingress
+    name: mf-swhurl-website-ingress
+  path: ingress-patch.json
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: mf-swhurl-website
+  path: deployment-patch.json

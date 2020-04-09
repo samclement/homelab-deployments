@@ -1,0 +1,16 @@
+[
+  { "op": "replace", "path": "/spec/template/spec/containers/0/name", "value": "stage-mf-swhurl-website" }, 
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/env",
+    "value": [ {
+          "name": "API_KEY",
+          "valueFrom": { 
+            "secretKeyRef": { 
+              "name": "stage-mf-swhurl-com-api-key",
+              "key": "apikey" 
+            }
+          }
+    } ]
+  }
+]

@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mf-swhurl-website-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - hosts:
+    - mf.swhurl.com
+    secretName: mf-swhurl-com-tls
+  rules:
+  - host: mf.swhurl.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: mf-swhurl-website
+          servicePort: 80
+

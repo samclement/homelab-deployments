@@ -1,0 +1,16 @@
+[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/env",
+    "value": [ {
+          "name": "API_KEY",
+          "valueFrom": { 
+            "secretKeyRef": { 
+              "name": "mf-swhurl-com-api-key",
+              "key": "apikey" 
+            }
+          }
+    } ]
+  }
+]
+

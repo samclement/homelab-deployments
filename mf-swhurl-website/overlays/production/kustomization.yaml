@@ -1,0 +1,13 @@
+bases:
+- ../../base
+resources:
+- sealed-secret.yaml
+commonLabels:
+  app: mf-swhurl-website
+patchesJson6902:
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: mf-swhurl-website
+  path: deployment-patch.json

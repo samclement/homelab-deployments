@@ -1,0 +1,35 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: mf-swhurl-website
+  annotations:
+    fluxcd.io/automated: "true"
+spec:
+  selector:
+    matchLabels:
+      app: mf-swhurl-website
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mf-swhurl-website
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+    spec:
+      containers:
+      - name: mf-swhurl-website
+        image: swhurl/mf-website:e0ec35e7bb6c46a4ee0ec122769a73375b7da221
+        # env:
+        # - name: API_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mf-swhurl-com-api-key
+        #       key: apikey
+        resources:
+          requests:
+            cpu: 100m
+            memory: 250Mi
+        ports:
+        - containerPort: 3000
+
