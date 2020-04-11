@@ -1,0 +1,1 @@
+{"jobID":"74f05440-bf54-1308-07d1-747699da49d2","spec":{"type":"policy","cause":{"Message":"","User":"Sam Clement \u003csam@swhurl.com\u003e"},"spec":{"default:deployment/stage-mf-swhurl-website-oauth2-proxy":{"add":{},"remove":{"automated":"true"}}}},"result":null}
