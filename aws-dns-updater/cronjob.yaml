@@ -29,6 +29,8 @@ kind: CronJob
 metadata:
   namespace: jobs
   name: aws-dns-updater
+  annotations:
+    fluxcd.io/automated: "true"
 spec:
   schedule: "*/3 * * * *"
   successfulJobsHistoryLimit: 2
