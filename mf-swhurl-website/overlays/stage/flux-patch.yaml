@@ -9,5 +9,5 @@ spec:
       $setElementOrder/containers:
       - name: stage-mf-swhurl-website
       containers:
-      - image: swhurl/mf-website:78428a4e27cd02799495e4390356593da4e8a5fd
+      - image: swhurl/mf-website:24b22e924f456322e3614718a5ef2b37ad959c8e
         name: stage-mf-swhurl-website
