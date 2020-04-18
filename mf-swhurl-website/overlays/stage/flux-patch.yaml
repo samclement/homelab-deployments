@@ -1,0 +1,13 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stage-mf-swhurl-website
+spec:
+  template:
+    spec:
+      $setElementOrder/containers:
+      - name: stage-mf-swhurl-website
+      containers:
+      - image: swhurl/mf-website:78428a4e27cd02799495e4390356593da4e8a5fd
+        name: stage-mf-swhurl-website
