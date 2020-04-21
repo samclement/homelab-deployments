@@ -32,7 +32,6 @@ metadata:
   annotations:
     fluxcd.io/automated: "true"
 spec:
-  suspend: true
   schedule: "*/3 * * * *"
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
